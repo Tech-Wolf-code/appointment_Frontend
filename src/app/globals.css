@@ -1,15 +1,11 @@
 @import "tailwindcss";
 
+/* =========================================
+   THEME VARIABLES
+========================================= */
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,8 +15,139 @@
   }
 }
 
+/* Tailwind theme extensions (fallback names) */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Inter", var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+/* =========================================
+   BASE
+========================================= */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+}
+
+/* Prevent content from hiding under navbar (optional) */
+main {
+  @apply pt-20;
+}
+
+/* =========================================
+   UNIVERSAL GLASS CARD
+========================================= */
+.glass-card {
+  @apply rounded-2xl border border-white/20 bg-white/10 backdrop-blur-xl
+         shadow-[0px_0px_25px_rgba(255,255,255,0.15)];
+}
+
+/* Extra fallback (explicit values like HTML version used) */
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+.input-glass {
+  @apply w-full p-3 rounded-xl bg-white/10 border border-white/20
+         text-white placeholder-white/60 outline-none
+         focus:border-blue-400 transition;
+}
+
+.select-glass {
+  @apply w-full p-3 rounded-xl bg-white/10 border border-white/20 text-white
+         outline-none appearance-none focus:border-blue-400;
+}
+
+.textarea-glass {
+  @apply w-full p-3 rounded-xl bg-white/10 border border-white/20
+         text-white outline-none focus:border-blue-400 transition;
+}
+
+/* =========================================
+   BUTTONS
+========================================= */
+.btn-primary {
+  @apply px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white
+         font-medium shadow-lg transition;
+}
+
+.btn-ghost {
+  @apply px-5 py-2 rounded-xl bg-white/10 border border-white/20
+         text-white hover:bg-white/20;
+}
+
+.btn-confirm {
+  @apply px-6 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white
+         font-semibold shadow-lg transition;
+}
+
+/* =========================================
+   STATS
+========================================= */
+.stat-box {
+  @apply p-4 rounded-xl text-center border border-white/20
+         bg-white/10 text-white text-lg;
+}
+
+/* =========================================
+   HERO BACKGROUND GLOW EFFECTS (fixed)
+   NOTE: do NOT @apply custom class names inside @apply.
+========================================= */
+/* Blue glow (combine utilities directly) */
+.hero-glow-blue {
+  @apply absolute rounded-full blur-3xl opacity-20 animate-pulse bg-blue-800;
+}
+
+/* Purple glow */
+.hero-glow-purple {
+  @apply absolute rounded-full blur-3xl opacity-20 animate-pulse bg-purple-800;
+}
+
+/* =========================================
+   UTILITIES FROM HTML VERSION
+========================================= */
+.section-title {
+  @apply text-3xl md:text-4xl font-bold text-center mb-12;
+}
+
+.card-hover {
+  @apply transform transition duration-300 hover:-translate-y-1;
+}
+
+/* Small niceties */
+.kicker {
+  @apply text-sm uppercase tracking-wider text-white/70;
+}
+
+.lead {
+  @apply text-lg text-gray-300;
+}
+
+/* Make sure glass-card children have spacing on smaller screens */
+.glass-card > * + * {
+  @apply mt-4;
+}
+
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
 }
