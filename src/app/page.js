@@ -14,6 +14,7 @@ import {
   Clock,
   Tag,
 } from "lucide-react";
+import Link from "next/link";
 
 import Footer from "@/components/Footer";
 
@@ -49,12 +50,22 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <a className="w-full sm:w-auto px-8 pb-3 rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg text-lg transition">
+            <Link
+              className="w-full sm:w-auto px-8 pb-3 rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg text-lg transition"
+              href="/book-service">
               Book a Repair Now
-            </a>
-            <a className="w-full sm:w-auto px-8 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-lg transition">
+              </Link>
+            {/* <a className="w-full sm:w-auto px-8 pb-3 rounded-xl bg-blue-600 hover:bg-blue-700 shadow-lg text-lg transition">
+              Book a Repair Now
+            </a> */}
+            <Link
+            className="w-full sm:w-auto px-8 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-lg transition"
+             href="/dashboard">
               Go to Dashboard
-            </a>
+            </Link >
+            {/* <a className="w-full sm:w-auto px-8 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-lg transition">
+              Go to Dashboard
+            </a> */}
           </div>
         </main>
       </div>
