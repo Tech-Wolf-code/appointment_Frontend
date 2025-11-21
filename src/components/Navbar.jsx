@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
-// Disable SSR for AuthActions (required)
+// Your actual AuthActions (Redux-based)
 const AuthActions = dynamic(() => import("./AuthActions"), { ssr: false });
 
 export default function TechFixNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMenu = () => setMobileOpen(!mobileOpen);
   const closeMenu = () => setMobileOpen(false);
@@ -18,7 +20,7 @@ export default function TechFixNavbar() {
     { label: "Home", href: "/" },
     { label: "Book Service", href: "/book-service" },
     { label: "Contact Us", href: "/contact" },
-    { label: "About Us", href: "/about" }
+    { label: "About Us", href: "/about" },
   ];
 
   return (
@@ -26,7 +28,7 @@ export default function TechFixNavbar() {
       <style>{`
         :root {
           --color-primary-blue: #60a5fa;
-          --color-glass-bg: rgba(15, 23, 42, 0.7);
+          --color-glass-bg: rgba(15, 23, 42, 0.95);
           --color-border-light: rgba(255, 255, 255, 0.1);
           --color-text-primary: #ffffff;
           --color-text-secondary: #d1d5db;
@@ -43,11 +45,10 @@ export default function TechFixNavbar() {
           background: var(--color-glass-bg);
           backdrop-filter: blur(var(--blur-amount));
           border-bottom: 1px solid var(--color-border-light);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .header-container {
-          max-width: rem;
+          max-width: 1280px;
           margin: 0 auto;
           padding: 1.5rem;
         }
@@ -67,7 +68,6 @@ export default function TechFixNavbar() {
           color: var(--color-primary-blue);
         }
 
-        /* Desktop nav */
         .nav-links-desktop {
           display: none;
           align-items: center;
@@ -79,15 +79,23 @@ export default function TechFixNavbar() {
           }
         }
 
+        /* NORMAL LINK */
         .nav-link {
           color: var(--color-text-secondary);
           font-size: 1rem;
           font-weight: 500;
           position: relative;
+          transition: color var(--transition-standard);
         }
-        .nav-link:hover {
-          color: var(--color-text-primary);
+
+        /* ACTIVE LINK */
+        .nav-link.active {
+          color: var(--color-primary-blue);
         }
+        .nav-link.active::after {
+          width: 100%;
+        }
+
         .nav-link::after {
           content: "";
           position: absolute;
@@ -102,47 +110,17 @@ export default function TechFixNavbar() {
           width: 100%;
         }
 
-        .desktop-auth {
-          display: none;
-        }
-        @media (min-width: 768px) {
-          .desktop-auth {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-          }
-        }
-
         .mobile-btn {
           padding: 0.5rem;
           border-radius: 0.5rem;
           background: rgba(255, 255, 255, 0.15);
           color: var(--color-text-primary);
         }
+
         @media (min-width: 768px) {
           .mobile-btn {
             display: none;
           }
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-          position: fixed;
-          top: 0;
-          right: 0;
-          height: 100vh;
-          width: 70%;
-          max-width: 300px;
-          background: var(--color-glass-bg);
-          backdrop-filter: blur(var(--blur-amount));
-          border-left: 1px solid var(--color-border-light);
-          padding: 1.5rem 0;
-          z-index: 1001;
-          animation: slideInRight 0.35s ease-out;
-        }
-        @keyframes slideInRight {
-          from { transform: translateX(100%); }
-          to { transform: translateX(0); }
         }
 
         .menu-overlay {
@@ -152,76 +130,125 @@ export default function TechFixNavbar() {
           z-index: 999;
         }
 
-        .mobile-menu-item {
-          padding: 0.875rem 1.5rem;
-          font-size: 1rem;
-          color: var(--color-text-secondary);
+        /* FULL SCREEN SIDEBAR */
+        .mobile-menu {
+          position: fixed;
+          top: 0;
+          right: 0;
+          width: 100%;
+          height: 100vh;
+          background: var(--color-glass-bg);
+          backdrop-filter: blur(var(--blur-amount));
+          padding: 1rem 0;
+          z-index: 1001;
+          display: flex;
+          flex-direction: column;
+          animation: slideInRight 0.35s ease-out;
+          overflow-y: auto;
         }
-        .mobile-menu-item:hover {
+
+        @keyframes slideInRight {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+
+        .menu-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 1.5rem 1rem;
+        }
+
+        /* MOBILE LINKS */
+        .mobile-menu-item {
+          padding: 1rem 1.5rem;
+          font-size: 1.3rem;
+          font-weight: 500;
+          color: var(--color-text-primary);
+          transition: all var(--transition-standard);
+        }
+
+        .mobile-menu-item.active {
+          color: var(--color-primary-blue);
           background: rgba(255, 255, 255, 0.1);
-          padding-left: 2rem;
+        }
+
+        .mobile-menu-item:hover {
+          background: rgba(255, 255, 255, 0.12);
+          padding-left: 2.2rem;
         }
 
         .mobile-auth-section {
           margin-top: auto;
           padding: 1.5rem;
+          border-top: 1px solid var(--color-border-light);
         }
       `}</style>
 
-      <header className="header ">
+      {/* NAVBAR */}
+      <header className="header">
         <div className="header-container">
           <nav className="nav">
             <Link href="/" className="logo">
               Tech<span className="logo-highlight">Fix</span>
             </Link>
 
-            {/* Desktop Nav */}
+            {/* DESKTOP NAV */}
             <div className="nav-links-desktop">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="nav-link">
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`nav-link ${pathname === link.href ? "active" : ""}`}
+                >
                   {link.label}
                 </Link>
               ))}
+
+              <div className="desktop-auth">
+                <AuthActions />
+              </div>
             </div>
 
-            {/* Desktop Auth */}
-            <div className="desktop-auth">
-              <AuthActions />
-            </div>
-
-            {/* Mobile Button */}
+            {/* MOBILE BUTTON */}
             <button className="mobile-btn" onClick={toggleMenu}>
-              {mobileOpen ? <X /> : <Menu />}
+              {mobileOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </nav>
         </div>
       </header>
 
-      {/* Overlay */}
-      {mobileOpen && (
-        <div className="menu-overlay" onClick={closeMenu} />
-      )}
+      {/* OVERLAY */}
+      {mobileOpen && <div className="menu-overlay" onClick={closeMenu} />}
 
-      {/* Mobile Menu */}
+      {/* FULL MOBILE SIDEBAR */}
       {mobileOpen && (
         <div className="mobile-menu">
-          <button
-            onClick={closeMenu}
-            className="text-white px-4 py-2"
-          >
-            <X size={24} />
-          </button>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="mobile-menu-item"
-              onClick={closeMenu}
-            >
-              {link.label}
+          <div className="menu-header">
+            <Link href="/" className="logo text-xl" onClick={closeMenu}>
+              Tech<span className="logo-highlight">Fix</span>
             </Link>
-          ))}
+
+            <button className="mobile-btn" onClick={closeMenu}>
+              <X size={26} />
+            </button>
+          </div>
+
+          {/* MOBILE NAV ITEMS */}
+          <nav className="flex flex-col space-y-2 mb-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={closeMenu}
+                className={`mobile-menu-item ${
+                  pathname === link.href ? "active" : ""
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
           <div className="mobile-auth-section">
             <AuthActions />
